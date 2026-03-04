@@ -1,0 +1,69 @@
+---
+title: Security Layers - Defense in Depth
+config:
+  theme: dark
+---
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph L1["📋 LAYER 1: Policies"]
+        P1[Auditoría de Logs]
+        P2[Incident Response]
+        P3[Access Reviews]
+    end
+
+    subgraph L2["🌐 LAYER 2: Perimeter"]
+        FW[Firewall UFW<br/>Rate Limiting]
+        F2B[Fail2ban<br/>Intrusion Prevention]
+        RP[Caddy Reverse Proxy<br/>Port 443 Only]
+    end
+
+    subgraph L3["🔒 LAYER 3: Network"]
+        VPN[Tailscale Mesh VPN<br/>100.77.1.30]
+        TLS[TLS 1.3 Encryption<br/>Let's Encrypt]
+        HSTS[HTTP Strict Transport<br/>Security Headers]
+    end
+
+    subgraph L4["🔐 LAYER 4: Authentication"]
+        SSO[Authelia SSO<br/>Single Sign-On]
+        MFA[MFA Gateway<br/>TOTP + WebAuthn]
+        JWT[JWT Sessions<br/>Secure Tokens]
+    end
+
+    subgraph L5["🛡️ LAYER 5: Application"]
+        HC[Hardening Configs]
+        CSP[Content Security Policy]
+        XV[XSS Protection]
+    end
+
+    subgraph L6["💾 LAYER 6: Data"]
+        ENC[Encryption at Rest]
+        BACK[Encrypted Backups]
+        SEC[Secrets in Vault]
+    end
+
+    subgraph ATTACKS["🚨 Attack Vectors Blocked"]
+        A1[❌ Brute Force]
+        A2[❌ MITM]
+        A3[❌ SQL Injection]
+        A4[❌ XSS]
+        A5[❌ CSRF]
+        A6[❌ Session Hijacking]
+    end
+
+    ATTACKS --> L2
+    L2 --> L3
+    L3 --> L4
+    L4 --> L5
+    L5 --> L6
+    L1 -.->|Monitor| L2
+    L1 -.->|Monitor| L3
+    L1 -.->|Monitor| L4
+
+    style L1 fill:#1a1b26,stroke:#7aa2f7,color:#c0caf5
+    style L2 fill:#24283b,stroke:#f7768e,color:#c0caf5
+    style L3 fill:#24283b,stroke:#7dcfff,color:#c0caf5
+    style L4 fill:#24283b,stroke:#bb9af7,color:#c0caf5
+    style L5 fill:#24283b,stroke:#9ece6a,color:#c0caf5
+    style L6 fill:#24283b,stroke:#e0af68,color:#c0caf5
+    style ATTACKS fill:#1a1b26,stroke:#f7768e,color:#c0caf5

@@ -1,0 +1,60 @@
+---
+title: Authentication Flow - Zero Trust Access
+config:
+  theme: dark
+---
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px' }}}%%
+
+sequenceDiagram
+    autonumber
+    actor U as 👤 Usuario
+    participant C as 🛡️ Caddy<br/>:443
+    participant A as 🔐 Authelia<br/>SSO/MFA
+    participant N as ☁️ Nextcloud<br/>:8080
+    participant R as ⚡ Redis<br/>Session
+    participant D as 🗄️ MySQL<br/>Database
+
+    Note over U,D: 🔒 SECURE AUTHENTICATION FLOW
+
+    U->>C: HTTPS Request<br/>nextcloud.alvarezconsult.es
+    activate C
+    
+    Note right of C: TLS 1.3 Encryption
+    
+    C->>A: forward_auth verify<br/>GET /api/verify
+    activate A
+    
+    alt No Valid Session
+        A-->>C: 302 Redirect<br/>→ Login Portal
+        C-->>U: Redirect to<br/>authelia.alvarezconsult.es
+        
+        U->>A: Username + Password
+        A->>A: Validate Credentials (1FA)
+        A->>U: Request TOTP Code
+        U->>A: TOTP Code (2FA)
+        A->>A: Validate TOTP
+        A->>R: Store Session
+        A-->>U: Set Session Cookie<br/>Redirect to Original URL
+    end
+    
+    A->>R: Validate Session
+    R-->>A: Session Valid
+    A-->>C: 200 OK + User Headers
+    deactivate A
+    
+    Note right of C: User Authenticated<br/>Remote-User: rubenalvarezdev
+    
+    C->>N: Proxy Request<br/>+ Auth Headers
+    activate N
+    
+    N->>R: Get User Session
+    R-->>N: Session Data
+    N->>D: Query User Data
+    D-->>N: User Files & Settings
+    N-->>C: Response (Nextcloud UI)
+    deactivate N
+    
+    C-->>U: HTTPS Response<br/>Nextcloud Dashboard
+    deactivate C
+    
+    Note over U,D: ✅ All traffic encrypted<br/>✅ All requests authenticated

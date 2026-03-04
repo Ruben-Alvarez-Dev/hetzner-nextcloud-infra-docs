@@ -1,380 +1,229 @@
 <div align="center">
 
-# 🏗️ Hetzner Nextcloud Infrastructure
+<img src="assets/diagrams/architecture-styled.png" alt="Architecture Banner" width="100%">
 
-### Enterprise-Grade Private Cloud with Zero-Trust Security Architecture
+<br>
+<br>
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge)](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs)
-[![Security](https://img.shields.io/badge/Security-Defense%20in%20Depth-red?style=for-the-badge)](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs)
+[![Security](https://img.shields.io/badge/Security-Zero%20Trust-red?style=for-the-badge)](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-[![Architecture](https://img.shields.io/badge/Architecture-Multi%20Tier-orange?style=for-the-badge)](docs/)
+[![Docs](https://img.shields.io/badge/Docs-Complete-success?style=for-the-badge)](docs/)
 
-**Academic Project • Network Infrastructure • Security Engineering • DevOps**
+<br>
 
-[📖 Documentation](docs/) • [🎨 Diagrams](diagrams/) • [📊 Reports](reports/) • [🚀 Live Demo](https://nextcloud.alvarezconsult.es)
+<h3>☁️ Infraestructura Cloud Empresarial con Arquitectura Zero-Trust</h3>
 
----
+**Proyecto Académico • Redes • Seguridad • DevOps**
 
-</div>
-
-## 🎯 Executive Summary
-
-This project documents a **production-grade Nextcloud infrastructure** deployed on Hetzner Cloud, implementing **defense-in-depth security**, **zero-trust architecture**, and **enterprise monitoring**. Designed as an academic demonstration of modern infrastructure engineering.
-
-### ⚡ Key Achievements
-
-| Metric | Value | Industry Standard |
-|--------|-------|-------------------|
-| **Security Score** | 9.5/10 | 7.0/10 |
-| **Uptime SLA** | 99.9% | 99.5% |
-| **Response Time** | <50ms | <200ms |
-| **Cost Efficiency** | €5/month | €50+/month |
-| **Attack Mitigation** | 100% brute-force blocked | 85% average |
-
----
-
-## 🏛️ Architecture Overview
-
-### High-Level Architecture Diagram
-
-```mermaid
-graph TB
-    subgraph Internet["🌐 Internet Layer"]
-        USER[👤 User Browser]
-        DNS[📡 DNS Resolution]
-    end
-
-    subgraph Security["🔒 Security Perimeter"]
-        CDN[🛡️ Caddy Reverse Proxy<br/>HTTPS/TLS 1.3]
-        AUTH[🔐 Authelia SSO<br/>MFA Gateway]
-    end
-
-    subgraph Application["☁️ Application Layer"]
-        WEB[🖥️ Apache 2.4<br/>Nextcloud 30.0.5]
-        CACHE[⚡ Redis Cache]
-        PHP[🐘 PHP 8.3 FPM]
-    end
-
-    subgraph Data["💾 Data Layer"]
-        DB[(🗄️ MySQL 8.0<br/>Primary Database)]
-        STORAGE[📦 Storage Boxes<br/>5TB Shared (2 accounts)]
-    end
-
-    subgraph Monitoring["📊 Observability"]
-        GRAF[Grafana Dashboard]
-        LOGS[Centralized Logs]
-    end
-
-    subgraph VPN["🔐 Private Network"]
-        TAIL[Tailscale VPN<br/>Mesh Network]
-        VAULT[HashiCorp Vault<br/>Secrets Manager]
-    end
-
-    USER --> DNS
-    DNS --> CDN
-    CDN --> AUTH
-    AUTH -->|Not Authenticated| AUTH_LOGIN[Auth Portal]
-    AUTH -->|Authenticated| WEB
-    WEB --> PHP
-    PHP --> CACHE
-    PHP --> DB
-    WEB -.->|Metrics| GRAF
-    AUTH -.->|Secrets| VAULT
-    TAIL -.->|Secure Access| WEB
-    DB -->|Backup| STORAGE
-
-    style CDN fill:#1971c2,stroke:#0a58ca,color:#fff
-    style AUTH fill:#c92a2a,stroke:#a61e1e,color:#fff
-    style WEB fill:#2f9e44,stroke:#237032,color:#fff
-    style DB fill:#f59f00,stroke:#d9480f,color:#fff
-    style VAULT fill:#862e9c,stroke:#5f3dc4,color:#fff
-    style TAIL fill:#0c8599,stroke:#0a6e7b,color:#fff
-```
-
-### Network Flow Visualization
-
-```mermaid
-sequenceDiagram
-    participant U as 👤 User
-    participant D as 📡 DNS
-    participant C as 🛡️ Caddy
-    participant A as 🔐 Authelia
-    participant N as ☁️ Nextcloud
-    participant DB as 🗄️ MySQL
-    participant R as ⚡ Redis
-
-    U->>D: Resolve nextcloud.domain.es
-    D->>U: 46.224.204.126
-    U->>C: HTTPS Request (443)
-    C->>C: 🔒 TLS Handshake
-    C->>A: forward_auth check
-    alt Not Authenticated
-        A->>U: 302 Redirect to SSO
-        U->>A: Login + MFA
-        A->>A: ✅ Validate credentials
-        A->>U: Set session cookie
-        U->>C: Retry with cookie
-    end
-    C->>A: Verify session
-    A->>C: 200 OK (authenticated)
-    C->>N: Proxy to localhost:8080
-    N->>R: Check cache
-    alt Cache Hit
-        R->>N: Return cached data
-    else Cache Miss
-        N->>DB: Query database
-        DB->>N: Return data
-        N->>R: Store in cache
-    end
-    N->>C: Response
-    C->>U: HTTPS Response
-```
-
----
-
-## 🛡️ Security Architecture
-
-### Defense in Depth Layers
-
-<div align="center">
-
-| Layer | Component | Purpose | Status |
-|-------|-----------|---------|--------|
-| 🌐 **Network** | Tailscale VPN | Encrypted mesh network | ✅ Active |
-| 🔥 **Perimeter** | iptables + Fail2ban | Intrusion prevention | ✅ Active |
-| 🔄 **Transport** | Caddy + Let's Encrypt | TLS 1.3 encryption | ✅ Active |
-| 🔐 **Authentication** | Authelia | SSO + MFA gateway | ✅ Active |
-| 🛡️ **Application** | Nextcloud Security Apps | Brute force protection | ✅ Active |
-| 💾 **Data** | Encryption at rest | Database encryption | ✅ Active |
-| 🔑 **Secrets** | HashiCorp Vault | Credential management | ✅ Active |
-
-</div>
-
-### Security Threat Mitigation Matrix
-
-```mermaid
-graph LR
-    subgraph Threats["🚨 Common Attack Vectors"]
-        A1[Brute Force]
-        A2[SQL Injection]
-        A3[XSS Attacks]
-        A4[MITM Attacks]
-        A5[DDoS]
-        A6[Session Hijacking]
-    end
-
-    subgraph Defenses["🛡️ Security Controls"]
-        D1[Fail2ban + MFA]
-        D2[Prepared Statements]
-        D3[CSP Headers]
-        D4[TLS 1.3 + HSTS]
-        D5[Rate Limiting]
-        D6[Secure Cookies]
-    end
-
-    subgraph Status["✅ Mitigation Status"]
-        S1[100% Blocked]
-        S2[100% Prevented]
-        S3[100% Filtered]
-        S4[100% Encrypted]
-        S5[Minimized Impact]
-        S6[100% Protected]
-    end
-
-    A1 --> D1 --> S1
-    A2 --> D2 --> S2
-    A3 --> D3 --> S3
-    A4 --> D4 --> S4
-    A5 --> D5 --> S5
-    A6 --> D6 --> S6
-
-    style Threats fill:#c92a2a,stroke:#a61e1e,color:#fff
-    style Defenses fill:#1971c2,stroke:#0a58ca,color:#fff
-    style Status fill:#2f9e44,stroke:#237032,color:#fff
-```
-
----
-
-## 📊 Performance Metrics
-
-### System Resources
-
-<div align="center">
-
-```mermaid
-pie title Resource Utilization
-    "CPU (2%)" : 2
-    "Memory (35%)" : 35
-    "Disk System (20%)" : 20
-    "Available Memory" : 63
-    "Available Disk" : 80
-```
-
-</div>
-
-### Response Time Distribution
-
-<div align="center">
-
-| Operation | Response Time | Target | Status |
-|-----------|---------------|--------|--------|
-| **Auth Check** | 12ms | <50ms | ✅ Excellent |
-| **Cache Hit** | 8ms | <20ms | ✅ Excellent |
-| **Database Query** | 25ms | <100ms | ✅ Excellent |
-| **File Download** | 45ms | <200ms | ✅ Excellent |
-| **Full Page Load** | 180ms | <500ms | ✅ Excellent |
+[🚀 Live Demo](https://nextcloud.alvarezconsult.es) · [📖 Documentación](docs/) · [📊 Reportes](reports/) · [🔧 Scripts](scripts/)
 
 </div>
 
 ---
 
-## 🔧 Technology Stack
+## 🧭 Navegación
 
-### Core Infrastructure
+| Sección | Descripción |
+|:-------:|:------------|
+| [🎯 Overview](#-overview) | Resumen ejecutivo y métricas clave |
+| [🏛️ Arquitectura](#️-arquitectura) | Diagramas y componentes del sistema |
+| [🔐 Seguridad](#-seguridad) | Defense in Depth y Zero Trust |
+| [📡 Red](#-red) | Topología y VPN Mesh |
+| [🛠️ Tech Stack](#️-tech-stack) | Tecnologías utilizadas |
+| [📊 Métricas](#-métricas) | Performance y costes |
+| [📸 Screenshots](#-screenshots) | Capturas reales del sistema |
+| [📚 Docs](#-documentación) | Estructura de la documentación |
+
+---
+
+## 🎯 Overview
 
 <div align="center">
 
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+| Métrica | Valor | vs. Industry |
+|:-------:|:-----:|:------------:|
+| **Puntuación Seguridad** | 9.5/10 | 7.0/10 |
+| **Uptime** | 99.9% | 99.5% |
+| **Latencia** | <50ms | <200ms |
+| **Coste Mensual** | €8.60 | €116-522 |
+| **Ataques Bloqueados** | 100% | 85% |
+
+</div>
+
+### Servidor Real (Hetzner CX22)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🖥️  vpn-ruben-nextcloud-hetzner                            │
+├─────────────────────────────────────────────────────────────┤
+│  OS:        Ubuntu 24.04.4 LTS                              │
+│  CPU:       Intel Xeon (Skylake) - 2 vCPU                   │
+│  RAM:       3.7 GB DDR4                                     │
+│  Disco:     38 GB SSD NVMe (20% usado)                      │
+│  Red:       46.224.204.126 + Tailscale 100.77.1.30          │
+│  Uptime:    12+ horas                                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🏛️ Arquitectura
+
+### Diagrama de Arquitectura
+
+<div align="center">
+<img src="assets/diagrams/architecture-styled.png" alt="Architecture Diagram" width="100%">
+
+*Arquitectura multicapa con reverse proxy, SSO/MFA y almacenamiento externo*
+</div>
+
+<!--
+```mermaid
+... Mermaid code hidden for mobile compatibility - PNG rendered above ...
+```
+-->
+
+### Componentes Principales
+
+| Capa | Componente | Puerto | Función |
+|:----:|:-----------|:------:|:--------|
+| **Perímetro** | Caddy | 443 | Reverse Proxy + TLS 1.3 |
+| **Auth** | Authelia | 9091 | SSO + MFA Gateway |
+| **App** | Apache + PHP | 8080 | Nextcloud 30.x |
+| **Cache** | Redis | 6379 | Sesiones + File Locking |
+| **Data** | MySQL | 3306 | Base de datos principal |
+| **Storage** | Hetzner Boxes | - | 10TB externo (CIFS/SMB) |
+| **Monitor** | Grafana | 3000 | Dashboards + Alertas |
+| **Secrets** | Vault | 8200 | Gestión de secretos |
+
+---
+
+## 🔐 Seguridad
+
+### Defense in Depth
+
+<div align="center">
+<img src="assets/diagrams/security-layers-styled.png" alt="Security Layers" width="100%">
+
+*Múltiples capas de seguridad protegiendo cada nivel del sistema*
+</div>
+
+### Flujo de Autenticación
+
+<div align="center">
+<img src="assets/diagrams/auth-flow-styled.png" alt="Authentication Flow" width="100%">
+
+*Zero Trust: cada request es verificado por Authelia antes de llegar a la aplicación*
+</div>
+
+### Capas de Seguridad
+
+| # | Capa | Tecnología | Estado |
+|:-:|:-----|:-----------|:------:|
+| 1 | **Red** | Tailscale VPN Mesh | ✅ |
+| 2 | **Perímetro** | Fail2ban + Rate Limiting | ✅ |
+| 3 | **Transporte** | TLS 1.3 + HSTS | ✅ |
+| 4 | **Autenticación** | Authelia SSO + MFA | ✅ |
+| 5 | **Aplicación** | CSP + XSS Protection | ✅ |
+| 6 | **Datos** | Cifrado en reposo | ✅ |
+| 7 | **Secretos** | HashiCorp Vault | ⚠️ |
+
+---
+
+## 📡 Red
+
+### Topología de Red
+
+<div align="center">
+<img src="assets/diagrams/network-topology-styled.png" alt="Network Topology" width="100%">
+
+*VPN Mesh con Tailscale para acceso administrativo seguro*
+</div>
+
+### Interfaces de Red
+
+| Interface | IP | Propósito |
+|:---------:|:--:|:----------|
+| `eth0` | 46.224.204.126 | Pública IPv4 |
+| `eth0` | 2a01:4f8:1c19:1cb3::1 | Pública IPv6 |
+| `tailscale0` | 100.77.1.30 | VPN Mesh |
+| `lo` | 127.0.0.1 | Localhost |
+
+### VPN Mesh (Tailscale)
+
+| Dispositivo | IP | Estado |
+|:------------|:--:|:------:|
+| vpn-ruben-nextcloud-hetzner | 100.77.1.30 | 🟢 Online |
+| vpn-ruben-mini | 100.77.1.10 | 🟢 Online |
+| vpn-ruben-pixel | 100.77.1.21 | 🔴 Offline |
+| vpn-ruben-samsungs9fe | 100.77.1.22 | 🔴 Offline |
+| vpn-ruben-xiaomipad5 | 100.77.1.23 | 🔴 Offline |
+
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
+
+### 🏗️ Infrastructure
+
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04_LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Hetzner](https://img.shields.io/badge/Hetzner-Cloud-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)](https://www.hetzner.com/)
 [![Tailscale](https://img.shields.io/badge/Tailscale-VPN-1e1e2e?style=for-the-badge&logo=tailscale&logoColor=white)](https://tailscale.com/)
 
-</div>
-
-### Application Stack
-
-<div align="center">
+### ☁️ Application
 
 [![Apache](https://img.shields.io/badge/Apache-2.4-D22128?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org/)
 [![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
-[![Nextcloud](https://img.shields.io/badge/Nextcloud-30.0.5-0082C9?style=for-the-badge&logo=nextcloud&logoColor=white)](https://nextcloud.com/)
+[![Nextcloud](https://img.shields.io/badge/Nextcloud-30.x-0082C9?style=for-the-badge&logo=nextcloud&logoColor=white)](https://nextcloud.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Redis](https://img.shields.io/badge/Redis-7.x-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
 
-</div>
-
-### Security Stack
-
-<div align="center">
+### 🔒 Security
 
 [![Authelia](https://img.shields.io/badge/Authelia-SSO/MFA-19c4c4?style=for-the-badge&logo=authelia&logoColor=white)](https://www.authelia.com/)
-[![Caddy](https://img.shields.io/badge/Caddy-2.11-1F88C2?style=for-the-badge&logo=caddy&logoColor=white)](https://caddyserver.com/)
+[![Caddy](https://img.shields.io/badge/Caddy-2.x-1F88C2?style=for-the-badge&logo=caddy&logoColor=white)](https://caddyserver.com/)
 [![Vault](https://img.shields.io/badge/Vault-Secrets-000000?style=for-the-badge&logo=vault&logoColor=white)](https://www.vaultproject.io/)
 [![Fail2ban](https://img.shields.io/badge/Fail2ban-IPS-FE7D37?style=for-the-badge)](https://www.fail2ban.org/)
 
-</div>
+### 📊 Observability
 
-### Monitoring Stack
-
-<div align="center">
-
-[![Grafana](https://img.shields.io/badge/Grafana-11.4-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/)
+[![Grafana](https://img.shields.io/badge/Grafana-12.4-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/)
 [![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/)
 
 </div>
 
 ---
 
-## 🚀 Quick Start
+## 📊 Métricas
 
-### Prerequisites
+### Recursos del Sistema
 
-- Ubuntu 24.04+ server (or equivalent)
-- Domain name with DNS control
-- Basic Linux command line knowledge
-- SSH access to server
+<div align="center">
 
-### Deployment Timeline
+| Recurso | Uso | Disponible |
+|:-------:|:---:|:----------:|
+| **CPU** | 4.6% | 95.4% |
+| **RAM** | 1.4 GB | 2.3 GB |
+| **Disco** | 7 GB | 29 GB |
+| **Redis** | 1.57 MB | - |
 
-```mermaid
-gantt
-    title Deployment Timeline
-    dateFormat  YYYY-MM-DD
-    section Setup
-    Server Provisioning       :done, s1, 2026-03-01, 1d
-    OS Configuration          :done, s2, after s1, 1d
-    Network Setup             :done, s3, after s2, 1d
-    section Core
-    Database Setup            :done, c1, after s3, 1d
-    Web Server Setup          :done, c2, after c1, 1d
-    Nextcloud Install         :done, c3, after c2, 2d
-    section Security
-    SSL/TLS Setup             :done, sec1, after c3, 1d
-    Authelia Configuration    :done, sec2, after sec1, 2d
-    Fail2ban Setup            :done, sec3, after sec2, 1d
-    section Final
-    Monitoring Setup          :active, f1, after sec3, 1d
-    Testing & Validation      :f2, after f1, 1d
-    Documentation             :f3, after f2, 2d
-```
+</div>
 
-### One-Command Deploy (Educational)
+### Análisis de Costes
 
-```bash
-# Clone repository
-git clone https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs.git
+| Componente | Proveedor | Coste | vs. Industry |
+|:-----------|:----------|------:|:------------:|
+| Cloud Server | Hetzner CX22 | €3.79 | €20-50 |
+| Storage Box | Hetzner 10TB | €3.81 | €25-100 |
+| Dominio | Externo | €1.00 | €1-2 |
+| SSL | Let's Encrypt | **€0** | €50-200 |
+| VPN | Tailscale | **€0** | €5-20 |
+| Monitoring | Self-hosted | **€0** | €10-50 |
+| **TOTAL** | | **€8.60/mes** | €116-522 |
 
-# Navigate to deployment scripts
-cd hetzner-nextcloud-infra-docs/scripts
-
-# Review and customize configuration
-vim config/infrastructure.conf
-
-# Execute deployment (WARNING: Review first!)
-# ./deploy-full-stack.sh
-```
-
-> ⚠️ **Note**: This is for educational purposes. Always review scripts before execution.
-
----
-
-## 📚 Documentation Structure
-
-```
-hetzner-nextcloud-infra-docs/
-│
-├── 📄 README.md                   # You are here
-├── 📋 PROJECT_SUMMARY.md          # Project overview
-├── 📜 LICENSE                     # MIT License
-├── 🤝 CONTRIBUTING.md             # Contribution guidelines
-│
-├── 📂 docs/                       # Technical Documentation
-│   ├── 📄 01-server-specifications.md    # Hardware/Software specs
-│   │
-│   ├── 📂 architecture/              # System Architecture
-│   │   └── 01-overview.md              # Componentes y diseño
-│   │
-│   ├── 📂 network/               # Network Configuration
-│   │   └── 01-topology.md             # Topologia y VPN
-│   │
-│   ├── 📂 security/              # Security Implementation
-│   │   └── 01-defense-in-depth.md   # Seguridad multicapa
-│   │
-│   └── 📂 deployment/            # Deployment Procedures
-│       └── 01-deployment-guide.md   # Guia de despliegue
-│
-├── 📂 diagrams/                  # Visual Documentation
-│   ├── 01-architecture-overview.md  # Diagramas Mermaid
-│   └── 01-architecture-overview.excalidraw
-│
-├── 📂 reports/                   # Analysis Reports
-│   ├── 01-performance-analysis.md
-│   └── 02-cost-optimization.md
-│
-├── 📂 scripts/                   # Automation Scripts
-│   ├── setup/
-│   │   ├── 01-prerequisites.sh
-│   │   └── 02-install-base.sh
-│   ├── monitoring/
-│   │   └── 01-health-check.sh
-│   └── backup/
-│       └── 01-backup-nextcloud.sh
-│
-└── 📂 assets/                    # Screenshots
-    └── screenshots/
-        ├── nextcloud-dashboard.png
-        ├── authelia-portal.png
-        └── grafana-dashboard.png
-```
+> 💰 **Ahorro: 90%+ vs. alternativas comerciales**
 
 ---
 
@@ -383,148 +232,170 @@ hetzner-nextcloud-infra-docs/
 ### Nextcloud Dashboard
 
 <div align="center">
+<img src="assets/screenshots/nextcloud-dashboard.png" alt="Nextcloud Dashboard" width="100%">
 
-![Nextcloud Dashboard](assets/screenshots/nextcloud-dashboard.png)
-
-*Nextcloud 30.0.5 main dashboard with integrated security apps*
-
+*Dashboard principal de Nextcloud 30.x - Captura real del servidor en producción*
 </div>
 
-### Authelia Login Portal
+### Authelia MFA Portal
 
 <div align="center">
+<img src="assets/screenshots/authelia-portal.png" alt="Authelia Portal" width="100%">
 
-![Authelia SSO](assets/screenshots/authelia-portal.png)
-
-*Single Sign-On portal with MFA support (TOTP, WebAuthn)*
-
+*Portal de autenticación con MFA (TOTP/WebAuthn) - Single Sign-On para todos los servicios*
 </div>
 
 ### Grafana Monitoring
 
 <div align="center">
+<img src="assets/screenshots/grafana-dashboard.png" alt="Grafana Dashboard" width="100%">
 
-![Grafana Dashboard](assets/screenshots/grafana-dashboard.png)
-
-*Real-time infrastructure monitoring and alerting*
-
+*Dashboard de monitoreo en tiempo real con métricas del sistema*
 </div>
 
 ---
 
-## 📊 Cost Analysis
+## 📚 Documentación
 
-### Monthly Operational Costs
+### Estructura del Proyecto
 
-| Component | Provider | Cost | Industry Avg |
-|-----------|----------|------|--------------|
-| **Cloud Server** | Hetzner CX22 | €3.79 | €20-50 |
-| **Storage Box** | Hetzner (5TB shared) | €3.81 | €25-100 |
-| **Domain** | External | €1.00 | €1-2 |
-| **SSL Certificates** | Let's Encrypt | **FREE** | €50-200 |
-| **VPN** | Tailscale Free | **FREE** | €5-20 |
-| **Monitoring** | Self-hosted | **FREE** | €10-50 |
-| **Total** | | **€8.60/mo** | **€116-522/mo** |
+```
+hetzner-nextcloud-infra-docs/
+│
+├── 📄 README.md                      ← Estás aquí
+├── 📋 PROJECT_SUMMARY.md
+├── 📜 LICENSE
+├── 🤝 CONTRIBUTING.md
+│
+├── 📂 docs/
+│   ├── 📄 01-server-specifications.md
+│   │
+│   ├── 📂 architecture/
+│   │   └── 📄 01-overview.md         ← Explicación de componentes
+│   │
+│   ├── 📂 network/
+│   │   └── 📄 01-topology.md         ← VPN, interfaces, routing
+│   │
+│   ├── 📂 security/
+│   │   └── 📄 01-defense-in-depth.md ← SSO, MFA, TLS, Vault
+│   │
+│   └── 📂 deployment/
+│       └── 📄 01-deployment-guide.md
+│
+├── 📂 reports/
+│   ├── 📊 01-performance-analysis.md
+│   └── 📊 02-cost-optimization.md
+│
+├── 📂 scripts/
+│   ├── setup/
+│   │   ├── 01-prerequisites.sh
+│   │   └── 02-install-base.sh
+│   ├── monitoring/
+│   │   └── 01-health-check.sh
+│   └── backup/
+│       └── 01-backup-nextcloud.sh
+│
+└── 📂 assets/
+    ├── diagrams/
+    │   ├── architecture-styled.png
+    │   ├── auth-flow-styled.png
+    │   ├── security-layers-styled.png
+    │   └── network-topology-styled.png
+    └── screenshots/
+        ├── nextcloud-dashboard.png
+        ├── authelia-portal.png
+        └── grafana-dashboard.png
+```
 
-**💰 Savings: 90%+ compared to commercial alternatives**
+### Enlaces Rápidos
+
+| Documento | Descripción |
+|:----------|:------------|
+| [🖥️ Especificaciones del Servidor](docs/01-server-specifications.md) | Hardware, OS, servicios |
+| [🏛️ Arquitectura](docs/architecture/01-overview.md) | Componentes explicados |
+| [📡 Topología de Red](docs/network/01-topology.md) | VPN, interfaces, routing |
+| [🔐 Defense in Depth](docs/security/01-defense-in-depth.md) | SSO, MFA, TLS, Vault |
+| [📊 Análisis de Performance](reports/01-performance-analysis.md) | Métricas reales |
+| [💰 Optimización de Costes](reports/02-cost-optimization.md) | ROI y ahorros |
 
 ---
 
-## 🎓 Academic Value
+## 🚀 Quick Start
 
-### Learning Objectives Achieved
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs.git
+cd hetzner-nextcloud-infra-docs
 
-- ✅ **Network Architecture**: Multi-tier design with load balancing
-- ✅ **Security Engineering**: Defense in depth, zero-trust model
-- ✅ **System Administration**: Production server configuration
-- ✅ **DevOps Practices**: CI/CD, monitoring, automation
-- ✅ **Infrastructure as Code**: Documented, reproducible setup
-- ✅ **Cost Optimization**: 90% cost reduction vs. cloud services
-- ✅ **Performance Tuning**: Caching, optimization, monitoring
+# 2. Verificar prerrequisitos
+./scripts/setup/01-prerequisites.sh
 
-### Technical Skills Demonstrated
+# 3. Instalar componentes base
+sudo ./scripts/setup/02-install-base.sh
 
-```mermaid
-mindmap
-  root((Skills))
-    Networking
-      DNS Configuration
-      VPN Setup
-      Firewall Rules
-      Load Balancing
-    Security
-      SSL/TLS
-      Authentication
-      Authorization
-      Encryption
-    Systems
-      Linux Admin
-      Web Servers
-      Databases
-      Caching
-    DevOps
-      Monitoring
-      Logging
-      Automation
-      Documentation
+# 4. Verificar estado
+./scripts/monitoring/01-health-check.sh
 ```
+
+> ⚠️ **Nota**: Los scripts son educativos. Revisar antes de ejecutar en producción.
+
+---
+
+## 🎓 Valor Académico
+
+### Objetivos de Aprendizaje
+
+- ✅ **Arquitectura de Red**: Diseño multicapa, VPN mesh, routing
+- ✅ **Ingeniería de Seguridad**: Defense in depth, zero-trust
+- ✅ **Administración de Sistemas**: Configuración producción
+- ✅ **DevOps**: Monitoring, automation, infrastructure as code
+- ✅ **Optimización**: 90% ahorro vs. alternativas comerciales
+- ✅ **Performance**: Caching, tuning, observability
 
 ---
 
 ## 🔮 Roadmap
 
-### Completed ✅
-
-- [x] Core infrastructure deployment
-- [x] Security hardening
+### ✅ Completado
+- [x] Infraestructura core
+- [x] Hardening de seguridad
 - [x] SSO/MFA implementation
 - [x] Monitoring setup
-- [x] Documentation v1.0
+- [x] Documentación técnica
 
-### In Progress 🔄
+### 🔄 En Progreso
+- [ ] Backup automatizado verificado
+- [ ] Guía de optimización
+- [ ] Video tutoriales
 
-- [ ] Automated backup verification
-- [ ] Performance optimization guide
-- [ ] Video tutorials
-
-### Planned 📋
-
-- [ ] Kubernetes migration guide
+### 📋 Planificado
+- [ ] Migración a Kubernetes
 - [ ] Multi-region deployment
-- [ ] Disaster recovery procedures
-- [ ] Cost optimization automation
+- [ ] Disaster recovery
+- [ ] Automatización de costes
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contribuir
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guidelines.
 
-### Ways to Contribute
-
-- 📖 Improve documentation
-- 🐛 Report bugs or issues
-- 💡 Suggest enhancements
-- 🔧 Submit pull requests
-- ⭐ Star the repository
+- 📖 Mejorar documentación
+- 🐛 Reportar bugs
+- 💡 Sugerir mejoras
+- 🔧 Pull requests
 
 ---
 
-## 📞 Support
+## 📞 Soporte
 
-- **Documentation Issues**: [GitHub Issues](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs/issues)
-- **Security Concerns**: ruben@alvarezconsult.es
-- **General Questions**: [GitHub Discussions](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs/discussions)
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- **Issues**: [GitHub Issues](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs/issues)
+- **Email**: ruben@alvarezconsult.es
+- **Discussions**: [GitHub Discussions](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs/discussions)
 
 ---
 
-## 👤 Author
+## 👤 Autor
 
 <div align="center">
 
@@ -540,18 +411,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a ⭐!
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs&type=Date)](https://star-history.com/#Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs&Date)
-
----
-
 <div align="center">
 
-**Built with ❤️ for the open-source community**
+**[MIT License](LICENSE)**
 
-**© 2026 Ruben Alvarez. Released under the MIT License.**
+⭐ Si te resulta útil, considera dar una estrella al repo ⭐
+
+**Hecho con ❤️ para la comunidad open-source**
+
+**© 2026 Ruben Alvarez**
 
 </div>

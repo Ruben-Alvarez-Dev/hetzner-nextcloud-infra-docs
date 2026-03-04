@@ -1,0 +1,79 @@
+---
+title: Network Topology - Mesh VPN Architecture
+config:
+  theme: dark
+---
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph CLOUD["☁️ INTERNET"]
+        USER[👤 Remote User<br/>Any Location]
+        DNS[📡 DNS Resolution<br/>Cloudflare]
+    end
+
+    subgraph TAILSCALE["🔐 Tailscale Mesh Network"]
+        direction TB
+        TS1[vpn-ruben-nextcloud-hetzner<br/>100.77.1.30 🟢]
+        TS2[vpn-ruben-mini<br/>100.77.1.10 🟢]
+        TS3[vpn-ruben-pixel<br/>100.77.1.21 🔴]
+        TS4[vpn-ruben-samsungs9fe<br/>100.77.1.22 🔴]
+        TS5[vpn-ruben-xiaomipad5<br/>100.77.1.23 🔴]
+        
+        TS1 -.->|WireGuard| TS2
+        TS1 -.->|WireGuard| TS3
+        TS1 -.->|WireGuard| TS4
+        TS1 -.->|WireGuard| TS5
+    end
+
+    subgraph HETZNER["🖥️ Hetzner CX22 Server"]
+        subgraph INTERFACES["📡 Network Interfaces"]
+            ETH[eth0<br/>46.224.204.126<br/>Public IPv4]
+            ETH6[eth0<br/>2a01:4f8:1c19:1cb3::1<br/>Public IPv6]
+            TS[tailscale0<br/>100.77.1.30<br/>VPN Mesh]
+            LO[lo<br/>127.0.0.1<br/>Localhost]
+        end
+        
+        subgraph SERVICES["⚙️ Services (localhost only)"]
+            S1[Caddy :443]
+            S2[Apache :8080]
+            S3[MySQL :3306]
+            S4[Redis :6379]
+            S5[Grafana :3000]
+            S6[Authelia :9091]
+            S7[Vault :8200]
+        end
+    end
+
+    subgraph STORAGE["💾 External Storage"]
+        SB1[Hetzner Storage Box<br/>u556648-sub3<br/>/mnt/storage-manuel<br/>5TB CIFS/SMB]
+        SB2[Hetzner Storage Box<br/>u556648-sub4<br/>/mnt/storage-ruben<br/>5TB CIFS/SMB]
+    end
+
+    USER --> DNS
+    DNS --> ETH
+    DNS --> ETH6
+    
+    ETH --> S1
+    ETH6 --> S1
+    
+    TS2 -.->|SSH Admin| TS
+    TS --> S1
+    
+    S1 --> S2
+    S1 --> S5
+    S1 --> S6
+    S1 --> S7
+    
+    S2 --> S3
+    S2 --> S4
+    S2 --> SB1
+    S2 --> SB2
+
+    style TS1 fill:#7aa2f7,stroke:#3d59a1,color:#1a1b26
+    style TS2 fill:#7aa2f7,stroke:#3d59a1,color:#1a1b26
+    style TS3 fill:#414868,stroke:#3d59a1,color:#565f89
+    style TS4 fill:#414868,stroke:#3d59a1,color:#565f89
+    style TS5 fill:#414868,stroke:#3d59a1,color:#565f89
+    style S1 fill:#7aa2f7,stroke:#3d59a1,color:#1a1b26
+    style SB1 fill:#7dcfff,stroke:#3d7da1,color:#1a1b26
+    style SB2 fill:#7dcfff,stroke:#3d7da1,color:#1a1b26
