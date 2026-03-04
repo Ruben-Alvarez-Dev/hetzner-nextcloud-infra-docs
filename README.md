@@ -1,315 +1,315 @@
 <div align="center">
 
-<img src="assets/diagrams/v2/01-overview-styled.png" alt="Architecture Overview" width="100%">
-
-<br>
-
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge)](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs)
-[![Security](https://img.shields.io/badge/Security-Zero%20Trust-red?style=for-the-badge)](https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs)
+[![Security](https://img.shields.io/badge/Security-Zero%20Trust-red?style=for-the-badge)](docs/security/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-[![Docs](https://img.shields.io/badge/Docs-Complete-success?style=for-the-badge)](docs/)
 
-[![Diagrams](https://img.shields.io/badge/Diagrams-Didactic-blue?style=for-the-badge)](assets/diagrams/v2/)
+<h1>☁️ Hetzner Nextcloud Infrastructure</h1>
 
-[![Scripts](https://img.shields.io/badge/Scripts-Tested-blue?style=for-the-badge)](scripts/)
-[![Cost](https://img.shields.io/badge/Cost-€8.60/mo-blue?style=for-the-badge)](reports/02-cost-optimization.md)
-
-[![Live](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://nextcloud.alvarezconsult.es)
-
-[![Mobile](https://img.shields.io/badge/Mobile-friendly-9cf?style=for-the-badge)](#)
-
-[![Uptime](https://img.shields.io/badge/Uptime-12+hrs-brightgreen?style=for-the-badge)](#)
-
-[![Savings](https://img.shields.io/badge/Savings-90%25-brightgreen?style=for-the-badge)](90%+ vs commercial)
-
-<br>
-
-<h3>☁️ Infraestructura Cloud Empresarial con Arquitectura Zero-Trust</h3>
+<h3>Private Cloud con Arquitectura Zero-Trust</h3>
 
 **Proyecto Académico • Redes • Seguridad • DevOps**
 
-<br>
-
-[🚀 **Live Demo**](https://nextcloud.alvarezconsult.es) · [📖 **Docs Completas**](docs/architecture/01-overview.md) · [🔐 **Seguridad**](docs/security/01-defense-in-depth.md) · [📡 **Red**](docs/network/01-topology.md) · [💰 **Costes**](reports/02-cost-optimization.md) · [🔧 **Scripts**](scripts/)
-
-<br>
-[⭐ **¡Dale una estrella al repo!**](#-estrellas) ⭐
-
-</div>
-
-</div>
+[🚀 **Demo**](https://nextcloud.alvarezconsult.es) · [📖 **Docs**](docs/) · [📊 **Reportes**](reports/) · [🔧 **Scripts**](scripts/)
 
 </div>
 
 ---
 
-## 🧭 Navegación Rápida
+## 🧭 Navegación
 
-</div>
-
-| Sección | Descripción | Tiempo |
-|:------:|:------------|:-----:|
-| [📖 **Inicio**](#-inicio) | Introducción y métricas | Rápido |
-| [🏛️ **Arquitectura**](#️-arquitectura) | Diagramas y componentes | Detallado |
-| [🔐 **Seguridad**](#-seguridad) | Flujo de auth y capas | Detallado |
-| [📡 **Red**](#-red) | VPN, interfaces | Detallado |
-| [📊 **Métricas**](#-métricas) | Performance y costes | Datos reales |
-| [📸 **Screenshots**](#-screenshots) | Capturas reales del sistema |
-
-</div>
+| Sección | Contenido |
+|:-------:|:----------|
+| [📚 **Fundamentos**](#-fundamentos) | Conceptos: VPS, Cloud Privado, Zero Trust, TLS, SSO, VPN |
+| [🏛️ **Arquitectura**](#️-arquitectura) | Componentes, diseño multicapa |
+| [🔐 **Seguridad**](#-seguridad) | Defense in Depth, flujo de auth |
+| [📡 **Red**](#-red) | VPN Mesh, interfaces |
+| [📊 **Métricas**](#-métricas) | Performance y costes reales |
+| [📸 **Galería**](#-galería) | Capturas del sistema |
 
 ---
 
-<a name="-overview"></a>
-## 🎯 Overview
+## 📚 Fundamentos
+
+> Antes de ver la arquitectura, entendamos los conceptos básicos.
+
+### 1. ¿Qué es un VPS (Cloud Server)?
 
 <div align="center">
-
-| Métrica | Valor | vs. Industry |
-|:------:|:----:|:----------:|
-| **Puntuación Seguridad** | 9.5/10 | 7.0/10 |
-| **Uptime** | 99.9% | 99.5% |
-| **Latencia** | <50ms | <200ms |
-| **Coste Mensual** | €8.60 | €116-522 |
-| **Ataques Bloqueados** | 100% | 85% |
-
+<img src="assets/diagrams/fundamentals/01-vps-concept.png" alt="VPS Concept" width="70%">
 </div>
 
-### Servidor Real
+Un **VPS (Virtual Private Server)** es una máquina virtual que se ejecuta en un servidor físico compartido:
 
-```
-┌─────────────────────────────────────────┐
-│  🖥️ vpn-ruben-nextcloud-hetzner     │
-├─────────────────────────────────────────┤
-│  CPU:     Intel Xeon (Skylake) - 2 vCPU │
-│  RAM:     3.7 GB DDR4                   │
-│  Disco:   38 GB SSD NVMe (20% usado)        │
-│  Red:     46.224.204.126 + Tailscale     │
-└─────────────────────────────────────────┘
-```
-</div>
+- **Hardware físico** → Un servidor potente con CPU, RAM y disco
+- **Hypervisor (KVM)** → Software que divide el hardware en partes virtuales
+- **Tu VPS** → Recursos dedicados (CPU virtual, RAM virtual, disco virtual)
+
+**Ventaja**: Pagas solo lo que necesitas, no todo el hardware.
 
 ---
 
-<a name="-arquitectura"></a>
+### 2. Cloud Público vs Cloud Privado
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/02-private-cloud.png" alt="Private Cloud" width="70%">
+</div>
+
+| Aspecto | Cloud Público (Google, Dropbox) | Cloud Privado (Nextcloud) |
+|:-------:|:-------------------------------|:--------------------------|
+| **Datos** | En sus servidores | En TU servidor |
+| **Privacidad** | Pueden acceder | Solo TÚ accedes |
+| **Control** | Sus reglas | Tus reglas |
+| **Coste** | €10-50/mes | €8.60/mes |
+
+**Por qué elegimos privado**: Privacidad total, control absoluto, menor coste.
+
+---
+
+### 3. Zero Trust: Nunca Confíes, Siempre Verifica
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/03-zero-trust.png" alt="Zero Trust" width="70%">
+</div>
+
+**Tradicional**: "Si estás dentro de la red, eres de confiar" → Un solo punto de falla
+
+**Zero Trust**: "Nunca confíes, siempre verifica" → Cada request es autenticada
+
+| Modelo | Si alguien entra... | Resultado |
+|:------:|:------------------:|:---------:|
+| Tradicional | Tiene acceso total | 💀 Desastre |
+| Zero Trust | Solo tiene acceso limitado | ✅ Daño mínimo |
+
+---
+
+### 4. Defense in Depth: 7 Capas de Seguridad
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/04-defense-depth.png" alt="Defense in Depth" width="70%">
+</div>
+
+Como una cebolla: si pelas una capa, hay otra debajo protegiendo.
+
+| Capa | Protección |
+|:----:|:-----------|
+| 1️⃣ Políticas | Procedimientos, auditorías |
+| 2️⃣ Perímetro | Firewall, rate limiting |
+| 3️⃣ Red | VPN, segmentación |
+| 4️⃣ Transporte | TLS 1.3, cifrado |
+| 5️⃣ Autenticación | SSO + MFA |
+| 6️⃣ Aplicación | CSP, validación |
+| 7️⃣ Datos | Cifrado en reposo |
+
+**Objetivo**: Si una capa falla, las demás siguen protegiendo.
+
+---
+
+### 5. TLS: Cifrado en Transporte
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/05-tls-concept.png" alt="TLS Concept" width="70%">
+</div>
+
+**Sin TLS**: Tus datos viajan en texto plano → Cualquiera puede leerlos
+
+**Con TLS 1.3**: Tus datos viajan cifrados → Nadie puede leerlos
+
+| Escenario | Sin TLS | Con TLS |
+|:---------:|:-------:|:-------:|
+| Contraseña en login | Visible | Cifrada |
+| Archivos subidos | Legibles | Ilegibles |
+| Comunicación | Insegura | Segura |
+
+**Implementación**: Caddy con Let's Encrypt automático.
+
+---
+
+### 6. SSO: Single Sign-On
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/06-sso-concept.png" alt="SSO Concept" width="70%">
+</div>
+
+**Sin SSO**: Una contraseña para cada aplicación → Muchas contraseñas, riesgo alto
+
+**Con SSO**: Un solo login para todas las apps → Una contraseña + 2FA, seguridad alta
+
+| Sistema | Logins | Riesgo |
+|:-------:|:------:|:------:|
+| Sin SSO | 5 apps = 5 contraseñas | Alto |
+| Con SSO | 5 apps = 1 login + MFA | Bajo |
+
+**Beneficio**: Más seguridad con menos esfuerzo.
+
+---
+
+### 7. VPN Mesh vs VPN Tradicional
+
+<div align="center">
+<img src="assets/diagrams/fundamentals/07-vpn-mesh.png" alt="VPN Mesh" width="70%">
+</div>
+
+**VPN Tradicional**: Todo el tráfico pasa por un servidor central → Punto único de falla
+
+**VPN Mesh (Tailscale)**: Conexiones directas entre dispositivos → Sin punto de falla
+
+| Característica | VPN Tradicional | VPN Mesh |
+|:--------------:|:---------------:|:--------:|
+| Latencia | Alta (server relay) | Baja (directo) |
+| Punto de falla | Sí (VPN server) | No |
+| Configuración | Compleja | Simple |
+
+**Implementación**: Tailscale con WireGuard.
+
+---
+
 ## 🏛️ Arquitectura
 
-<div align="center">
-<img src="assets/diagrams/v2/01-overview-styled.png" alt="Architecture Overview" width="90%">
+### Visión General
 
-*Arquitectura simplificada: 4 capas principales*
+<div align="center">
+<img src="assets/diagrams/v2/01-overview-styled.png" alt="Architecture" width="85%">
 </div>
 
-### Componentes
+### Stack Tecnológico
 
-| Capa | Componente | Puerto | Descripción |
-|:---:|:----------|:-----:|:------------|
-| **Perímetro** | Caddy | 443 | Reverse Proxy + HTTPS automático |
-| **Auth** | Authelia | 9091 | SSO + MFA (2FA obligatorio) |
-| **App** | Apache+PHP | 8080 | Nextcloud 30.x |
-| **Cache** | Redis | 6379 | Sesiones + File Locking |
-| **Data** | MySQL | 3306 | Base de datos principal |
-| **Storage** | Hetzner Boxes | — | 10TB externo (CIFS/SMB) |
-| **Monitor** | Grafana | 3000 | Dashboards + Alertas |
+| Capa | Componente | Tecnología | Función |
+|:---:|:----------|:----------|:--------|
+| **Perímetro** | Reverse Proxy | Caddy 2.x | HTTPS automático, TLS 1.3 |
+| **Auth** | SSO/MFA | Authelia | Autenticación + 2FA |
+| **App** | Servidor Web | Apache + PHP 8.3 | Nextcloud 30.x |
+| **Cache** | Caché | Redis 7.0 | Sesiones, file locks |
+| **Data** | Base de datos | MySQL 8.0 | Metadatos, usuarios |
+| **Storage** | Almacenamiento | Hetzner Boxes | 10TB externo |
+| **Monitor** | Observabilidad | Grafana + Prometheus | Métricas, alertas |
+| **Secrets** | Gestión secrets | Vault | Credenciales cifradas |
 
 ---
 
-<a name="-seguridad"></a>
 ## 🔐 Seguridad
-
-<div align="center">
-<img src="assets/diagrams/v2/02-security-cycle-styled.png" alt="Security Cycle" width="90%">
-
-*Cada request sigue un ciclo de verificación*
-</div>
 
 ### Flujo de Autenticación
 
 <div align="center">
-<img src="assets/diagrams/v2/05-authelia-explained-styled.png" alt="Auth Flow" width="85%">
-
-*Authelia: Password + TOTP → Sesión JWT → Acceso total*
+<img src="assets/diagrams/v2/02-security-cycle-styled.png" alt="Security Cycle" width="85%">
 </div>
+
+**Cada request sigue este ciclo**:
+
+1. Llega al servidor → **TLS descifra**
+2. Caddy verifica sesión → **Authelia**
+3. Si no hay sesión → **MFA obligatorio**
+4. Si pasa todo → **Acceso concedido**
 
 ### ¿Por qué es seguro?
 
-<div align="center">
-
-| Capa | Tecnología | Beneficio |
-|:---:|:----------|:--------:|
-| 🌐 **Red** | Tailscale VPN | Solo dispositivos autorizados pueden conectar |
-| 🔒 **Transporte** | TLS 1.3 | Tráfico cifrado end-to-end |
-| 🔐 **Auth** | Authelia MFA | 2 factores obligatorios (password + TOTP) |
-| 💾 **Datos** | Cifrado en reposo | Archivos protegidos en disco |
-| 🔑 **Secrets** | Vault | Credenciales cifradas, |
-| 🚫 **Intrusión** | Fail2ban | IPs maliciosas bloqueadas automáticamente |
-
-</div>
+| Ataque | Protección | Estado |
+|:------:|:-----------|:------:|
+| Fuerza bruta | Fail2ban + MFA | ✅ Bloqueado |
+| MITM | TLS 1.3 + HSTS | ✅ Imposible |
+| Session hijacking | JWT + HTTPS | ✅ Protegido |
+| SQL Injection | Prepared statements | ✅ Prevenido |
+| XSS | CSP headers | ✅ Filtrado |
 
 ---
-<a name="-red"></a>
-## 📡 Red y VPN
+
+## 📡 Red
+
+### VPN Mesh: Acceso Administrativo
 
 <div align="center">
-<img src="assets/diagrams/v2/06-tailscale-explained-styled.png" alt="VPN Mesh" width="90%">
-
-*VPN Mesh: acceso administrativo sin exponer puertos*
+<img src="assets/diagrams/v2/06-tailscale-explained-styled.png" alt="VPN Mesh" width="85%">
 </div>
+
+**Problema**: SSH abierto a Internet = Miles de ataques
+
+**Solución**: Tailscale VPN Mesh = Solo dispositivos autorizados
 
 ### Dispositivos Conectados
 
-| Dispositivo | IP | Estado |
-|:-----------:|:--:|:------:|
-| vpn-ruben-nextcloud-hetzner | 100.77.1.30 | 🟢 Online |
-| vpn-ruben-mini (MacBook) | 100.77.1.10 | 🟢 Online |
-| vpn-ruben-pixel | 100.77.1.21 | 🔴 Offline |
-| vpn-ruben-samsungs9fe | 100.77.1.22 | 🔴 Offline |
+| Dispositivo | IP VPN | Estado |
+|:-----------:|:------:|:------:|
+| vpn-nextcloud-hetzner | 100.77.1.30 | 🟢 |
+| vpn-ruben-mini | 100.77.1.10 | 🟢 |
+| Otros dispositivos | 100.77.1.xx | 🔴 |
 
 ---
 
-<a name="-storage"></a>
-## 💾 Almacenamiento
+## 📊 Métricas
 
-<div align="center">
-<img src="assets/diagrams/v2/07-storage-explained-styled.png" alt="Storage Architecture" width="90%">
+### Recursos del Sistema
 
-*10TB externos via CIFS/SMB, redundancia incluida*
-</div>
-
-### Storage Boxes Reales
-| Mount Point | Capacidad | Uso |
-|:-----------:|:--------:|:---:|
-| `/mnt/storage-ruben` | 5 TB | Archivos usuario Ruben |
-| `/mnt/storage-manuel` | 5 TB | Archivos usuario Manuel |
-
----
-
-<a name="-cache"></a>
-## ⚡ Cache
-
-<div align="center">
-<img src="assets/diagrams/v2/08-redis-explained-styled.png" alt="Redis Cache" width="90%">
-
-*Redis: de 50ms a 1ms en consultas repetidas*
-</div>
-
-### ¿Qué cacheamos?
-| Tipo | Beneficio |
-|:---:|:--------:|
-| **File Locks** | Evita conflictos en edición simultánea |
-| **Sessions** | Login rápido sin cargar MySQL |
-| **Queries** | Resultados de consultas frecuentes |
-
----
-
-<a name="-tech-stack"></a>
-## 🛠️ Tech Stack
-
-<div align="center">
-
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04_LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
-[![Hetzner](https://img.shields.io/badge/Hetzner-CX22-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)](https://www.hetzner.com/)
-[![Caddy](https://img.shields.io/badge/Caddy-2.x-1F88C2?style=for-the-badge&logo=caddy&logoColor=white)](https://caddyserver.com/)
-[![Authelia](https://img.shields.io/badge/Authelia-SSO/MFA-19c4c4?style=for-the-badge&logo=authelia&logoColor=white)](https://www.authelia.com/)
-[![Nextcloud](https://img.shields.io/badge/Nextcloud-30.x-0082C9?style=for-the-badge&logo=nextcloud&logoColor=white)](https://nextcloud.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
-[![Tailscale](https://img.shields.io/badge/Tailscale-VPN-1e1e2e?style=for-the-badge&logo=tailscale&logoColor=white)](https://tailscale.com/)
-[![Grafana](https://img.shields.io/badge/Grafana-12.x-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/)
-[![Vault](https://img.shields.io/badge/Vault-Secrets-000000?style=for-the-badge&logo=vault&logoColor=white)](https://www.vaultproject.io/)
-
-</div>
-
----
-
-<a name="-metricas"></a>
-## 📊 Métricas Reales
-
-<div align="center">
-
-| Recurso | Uso | Estado |
-|:------:|:---:|:------:|
-| **CPU** | 4.6% | 🟢 Óptimo |
-| **RAM** | 1.4 GB / 3.7 GB | 🟢 OK |
-| **Disco** | 7 GB / 38 GB | 🟢 OK |
-| **Redis** | 1.57 MB | 🟢 OK |
-| **Uptime** | 12+ horas | 🟢 |
-
-</div>
+| Recurso | Uso | Disponible |
+|:-------:|:---:|:----------:|
+| CPU | 4.6% | 95.4% |
+| RAM | 1.4 GB | 2.3 GB |
+| Disco | 7 GB | 29 GB |
+| Redis | 1.57 MB | - |
 
 ### Costes Mensuales
-| Componente | Coste | Alternativa |
-|:----------||------:|:------------|
-| Server CX22 | €3.79 | €20-50 |
-| Storage 10TB | €3.81 | €25-100 |
-| Dominio | €1.00 | €1-2 |
-| SSL (Let's Encrypt) | **€0** | €50-200 |
-| VPN (Tailscale) | **€0** | €5-20 |
-| Monitoring | **€0** | €10-50 |
-| **TOTAL** | **€8.60** | **€116-522** |
 
-> 💰 **Ahorras del 90%+ vs. alternativas comerciales**
+| Componente | Proveedor | Coste |
+|:-----------|:----------|------:|
+| Server CX22 | Hetzner | €3.79 |
+| Storage 10TB | Hetzner | €3.81 |
+| Dominio | Externo | €1.00 |
+| SSL | Let's Encrypt | €0 |
+| VPN | Tailscale | €0 |
+| Monitoring | Self-hosted | €0 |
+| **TOTAL** | | **€8.60** |
+
+> 💰 **Ahorro del 90%+ vs. Google Workspace, Dropbox Business, etc.**
 
 ---
 
-<a name="-screenshots"></a>
-## 📸 Capturas Reales
+## 📸 Galería
 
 ### Nextcloud Dashboard
 <div align="center">
-<img src="assets/screenshots/nextcloud-dashboard.png" alt="Nextcloud" width="80%">
-
-*Dashboard principal - Captura real del servidor en producción*
+<img src="assets/screenshots/nextcloud-dashboard.png" alt="Nextcloud" width="75%">
 </div>
 
 ### Authelia MFA
 <div align="center">
-<img src="assets/screenshots/authelia-portal.png" alt="Authelia" width="80%">
-
-*Portal de autenticación - MFA obligatorio para acceder*
+<img src="assets/screenshots/authelia-portal.png" alt="Authelia" width="75%">
 </div>
 
 ### Grafana Monitoring
 <div align="center">
-<img src="assets/screenshots/grafana-dashboard.png" alt="Grafana" width="80%">
-
-*Dashboard de monitoreo en tiempo real*
+<img src="assets/screenshots/grafana-dashboard.png" alt="Grafana" width="75%">
 </div>
 
 ---
 
-<a name="-documentación"></a>
 ## 📚 Documentación
 
 | Documento | Descripción |
 |:----------|:------------|
-| [🖥️ **Especificaciones del Servidor**](docs/01-server-specifications.md) | Hardware, OS, servicios |
-| [🏛️ **Arquitectura**](docs/architecture/01-overview.md) | Componentes explicados didácticamente |
-| [📡 **Topología de Red**](docs/network/01-topology.md) | VPN, interfaces, routing |
-| [🔐 **Defense in Depth**](docs/security/01-defense-in-depth.md) | SSO, MFA, TLS, Vault |
-| [📊 **Análisis Performance**](reports/01-performance-analysis.md) | Métricas reales |
-| [💰 **Optimización Costes**](reports/02-cost-optimization.md) | ROI y ahorros |
+| [🖥️ Especificaciones](docs/01-server-specifications.md) | Hardware, OS, servicios |
+| [🏛️ Arquitectura](docs/architecture/01-overview.md) | Componentes explicados |
+| [📡 Red](docs/network/01-topology.md) | VPN, interfaces |
+| [🔐 Seguridad](docs/security/01-defense-in-depth.md) | Defense in Depth |
+| [📊 Performance](reports/01-performance-analysis.md) | Métricas reales |
+| [💰 Costes](reports/02-cost-optimization.md) | ROI |
 
 ---
 
-<a name="-quick-start"></a>
 ## 🚀 Quick Start
 
 ```bash
-# Clonar repositorio
+# Clonar
 git clone https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs.git
 
-# Verificar prerrequisitos
+# Prerrequisitos
 ./scripts/setup/01-prerequisites.sh
 
 # Health check
 ./scripts/monitoring/01-health-check.sh
 ```
-</div>
 
 ---
 
-<a name="-footer"></a>
 <div align="center">
 
 **[MIT License](LICENSE)**
@@ -317,4 +317,5 @@ git clone https://github.com/Ruben-Alvarez-Dev/hetzner-nextcloud-infra-docs.git
 Hecho con ❤️ para la comunidad open-source
 
 **© 2026 Ruben Alvarez**
+
 </div>
