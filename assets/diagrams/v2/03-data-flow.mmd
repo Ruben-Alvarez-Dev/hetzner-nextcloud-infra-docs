@@ -1,0 +1,31 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph LR
+    subgraph USER["👤 Your Device"]
+        File[📄 File]
+    end
+    
+    subgraph TRANSIT["🔐 In Transit"]
+        TLS[TLS 1.3<br/>Encrypted]
+    end
+    
+    subgraph SERVER["🖥️ Server"]
+        Decrypt[🔓 Decrypt]
+        Auth[✓ Auth Check]
+        Store[🔐 Encrypt Again]
+    end
+    
+    subgraph STORAGE["💾 Storage"]
+        AtRest[🔒 At Rest]
+    end
+    
+    File -->|1. Upload| TLS
+    TLS -->|2. Safe| Decrypt
+    Decrypt -->|3. Verify| Auth
+    Auth -->|4. Process| Store
+    Store -->|5. Save| AtRest
+
+    style TLS fill:#7dcfff,color:#1a1b26
+    style Auth fill:#9ece6a,color:#1a1b26
+    style Store fill:#f7768e,color:#1a1b26
+    style AtRest fill:#bb9af7,color:#1a1b26

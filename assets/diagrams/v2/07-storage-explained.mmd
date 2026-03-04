@@ -1,0 +1,25 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph LOCAL["🖥️ Local Server"]
+        L1[38GB SSD<br/>System + Apps]
+    end
+    
+    subgraph EXTERNAL["📦 Storage Boxes"]
+        E1[u556648-sub3<br/>5TB Manuel]
+        E2[u556648-sub4<br/>5TB Ruben]
+    end
+    
+    subgraph PROTOCOL["📡 Connection"]
+        P1[CIFS/SMB 3.1.1<br/>Encrypted]
+        P2[Auto Mount<br/>systemd]
+        P3[RAID Backend<br/>Hetzner]
+    end
+    
+    LOCAL --> PROTOCOL
+    PROTOCOL --> EXTERNAL
+
+    style L1 fill:#7aa2f7,color:#1a1b26
+    style E1 fill:#7dcfff,color:#1a1b26
+    style E2 fill:#7dcfff,color:#1a1b26
+    style P1 fill:#9ece6a,color:#1a1b26

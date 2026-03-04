@@ -1,0 +1,38 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '18px' }}}%%
+
+graph LR
+    subgraph EXT["🌐 External"]
+        U[👤 User]
+    end
+    
+    subgraph SEC["🔒 Security"]
+        Caddy[Caddy<br/>TLS 1.3]
+        Auth[Authelia<br/>SSO+MFA]
+    end
+    
+    subgraph APP["⚡ Application"]
+        NC[Nextcloud]
+        DB[(MySQL)]
+        Cache[(Redis)]
+    end
+    
+    subgraph DATA["💾 Storage"]
+        Box1[📦 5TB]
+        Box2[📦 5TB]
+    end
+    
+    U -->|HTTPS| Caddy
+    Caddy -->|Auth| Auth
+    Auth -->|OK| NC
+    NC --> DB
+    NC --> Cache
+    NC --> Box1
+    NC --> Box2
+
+    style Caddy fill:#7aa2f7,color:#1a1b26
+    style Auth fill:#f7768e,color:#1a1b26
+    style NC fill:#9ece6a,color:#1a1b26
+    style DB fill:#e0af68,color:#1a1b26
+    style Cache fill:#bb9af7,color:#1a1b26
+    style Box1 fill:#7dcfff,color:#1a1b26
+    style Box2 fill:#7dcfff,color:#1a1b26

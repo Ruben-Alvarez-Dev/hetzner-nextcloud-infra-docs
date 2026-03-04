@@ -1,0 +1,35 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph PROBLEM["❌ The Problem"]
+        P1[SSH Port 22<br/>Open to Internet]
+        P2[Brute Force<br/>Thousands of Attempts]
+        P3[Zero-Day Risk<br/>in OpenSSH]
+    end
+    
+    subgraph SOLUTION["✅ Solution: Tailscale"]
+        S1[No Open Ports<br/>Punches NAT]
+        S2[WireGuard<br/>Fast + Encrypted]
+        S3[Device Auth<br/>Only Allowed]
+    end
+    
+    subgraph MESH["🔗 Your Network"]
+        M1[Server<br/>100.77.1.30]
+        M2[MacBook<br/>100.77.1.10]
+        M3[Phone<br/>100.77.1.21]
+    end
+    
+    PROBLEM --> SOLUTION
+    SOLUTION --> MESH
+    M1 -.-> M2
+    M1 -.-> M3
+
+    style P1 fill:#f7768e,color:#1a1b26
+    style P2 fill:#f7768e,color:#1a1b26
+    style P3 fill:#f7768e,color:#1a1b26
+    style S1 fill:#9ece6a,color:#1a1b26
+    style S2 fill:#9ece6a,color:#1a1b26
+    style S3 fill:#9ece6a,color:#1a1b26
+    style M1 fill:#7aa2f7,color:#1a1b26
+    style M2 fill:#7dcfff,color:#1a1b26
+    style M3 fill:#bb9af7,color:#1a1b26

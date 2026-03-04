@@ -1,0 +1,29 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph WHAT["❓ What is Authelia?"]
+        W1[Identity Provider<br/>SSO Portal]
+    end
+    
+    subgraph FACTORS["🔑 Authentication"]
+        F1[1FA: Password<br/>You KNOW]
+        F2[2FA: TOTP<br/>You HAVE]
+        F3[2FA: WebAuthn<br/>Hardware Key]
+    end
+    
+    subgraph FLOW["➡️ Login Flow"]
+        L1[1. Username]
+        L2[2. Password]
+        L3[3. TOTP Code]
+        L4[4. Access All]
+    end
+    
+    WHAT --> FACTORS
+    FACTORS --> FLOW
+    L1 --> L2 --> L3 --> L4
+
+    style W1 fill:#f7768e,color:#1a1b26
+    style F1 fill:#e0af68,color:#1a1b26
+    style F2 fill:#7aa2f7,color:#1a1b26
+    style F3 fill:#bb9af7,color:#1a1b26
+    style L4 fill:#9ece6a,color:#1a1b26

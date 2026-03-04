@@ -1,0 +1,31 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph WHAT["❓ What is Caddy?"]
+        W1[Reverse Proxy<br/>Web Server]
+    end
+    
+    subgraph WHY["✅ Why We Use It"]
+        Y1[Automatic HTTPS<br/>Let's Encrypt]
+        Y2[TLS 1.3 Only<br/>Modern Crypto]
+        Y3[HTTP/2 + HTTP/3<br/>Fast]
+        Y4[forward_auth<br/>Authelia Integration]
+    end
+    
+    subgraph HOW["⚙️ How It Works"]
+        H1[Port 443 Only<br/>No HTTP]
+        H2[Auto Renew<br/>90 days]
+        H3[Proxies to<br/>localhost:8080]
+    end
+    
+    WHAT --> WHY
+    WHY --> HOW
+
+    style W1 fill:#7aa2f7,color:#1a1b26
+    style Y1 fill:#9ece6a,color:#1a1b26
+    style Y2 fill:#9ece6a,color:#1a1b26
+    style Y3 fill:#9ece6a,color:#1a1b26
+    style Y4 fill:#9ece6a,color:#1a1b26
+    style H1 fill:#7dcfff,color:#1a1b26
+    style H2 fill:#7dcfff,color:#1a1b26
+    style H3 fill:#7dcfff,color:#1a1b26

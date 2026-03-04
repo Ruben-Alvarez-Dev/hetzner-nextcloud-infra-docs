@@ -1,0 +1,28 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '16px' }}}%%
+
+graph TB
+    R1[1️⃣ Request Arrives]
+    R2[2️⃣ TLS Decrypted]
+    R3[3️⃣ Session Checked]
+    R4{4️⃣ Valid Session?}
+    R5[5️⃣ MFA Challenge]
+    R6[6️⃣ Access Granted]
+    R7[❌ Blocked]
+    
+    R1 --> R2
+    R2 --> R3
+    R3 --> R4
+    R4 -->|No| R5
+    R5 --> R6
+    R6 --> APP[☁️ Application]
+    R4 -->|Yes| APP
+    R4 -->|Attack| R7
+
+    style R1 fill:#7aa2f7,color:#1a1b26
+    style R2 fill:#7dcfff,color:#1a1b26
+    style R3 fill:#bb9af7,color:#1a1b26
+    style R4 fill:#e0af68,color:#1a1b26
+    style R5 fill:#f7768e,color:#1a1b26
+    style R6 fill:#9ece6a,color:#1a1b26
+    style R7 fill:#f7768e,color:#1a1b26
+    style APP fill:#9ece6a,color:#1a1b26

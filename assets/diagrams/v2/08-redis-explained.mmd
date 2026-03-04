@@ -1,0 +1,27 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph LR
+    subgraph WITHOUT["❌ Without Cache"]
+        W1[Request] --> W2[Query DB]
+        W2 --> W3[50ms]
+        W3 --> W4[Response]
+    end
+    
+    subgraph WITH["✅ With Redis"]
+        R1[Request] --> R2{Cache?}
+        R2 -->|Hit| R3[1ms]
+        R2 -->|Miss| R4[Query]
+        R4 --> R5[Cache]
+        R5 --> R3
+        R3 --> R6[Response]
+    end
+    
+    subgraph USES["🎯 Uses"]
+        U1[File Locks]
+        U2[Sessions]
+        U3[Queries]
+    end
+
+    style W3 fill:#f7768e,color:#1a1b26
+    style R3 fill:#9ece6a,color:#1a1b26
+    style U1 fill:#bb9af7,color:#1a1b26
