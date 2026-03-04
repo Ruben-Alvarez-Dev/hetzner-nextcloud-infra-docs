@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+vendor/
+.bundle/
+
+# Build outputs
+dist/
+build/
+*.o
+*.pyc
+__pycache__/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Generated files
+*.generated.*
+*.auto.*
+
+# Diagrams (keep source, ignore exports)
+diagrams/*.png
+diagrams/*.svg
+diagrams/*.pdf
+
+# Reports (keep markdown, ignore generated formats)
+reports/*.pdf
+reports/*.html
