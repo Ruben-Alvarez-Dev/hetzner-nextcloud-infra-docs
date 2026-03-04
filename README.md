@@ -340,41 +340,40 @@ hetzner-nextcloud-infra-docs/
 ├── 📂 docs/                       # Technical Documentation
 │   ├── 📄 01-server-specifications.md    # Hardware/Software specs
 │   │
-│   ├── 📂 architecture/          # System Architecture
-│   │   ├── 01-overview.md
-│   │   ├── 02-components.md
-│   │   └── 03-scalability.md
+│   ├── 📂 architecture/              # System Architecture
+│   │   └── 01-overview.md              # Componentes y diseño
 │   │
 │   ├── 📂 network/               # Network Configuration
-│   │   ├── 01-topology.md
-│   │   ├── 02-dns.md
-│   │   └── 03-vpn.md
+│   │   └── 01-topology.md             # Topologia y VPN
 │   │
 │   ├── 📂 security/              # Security Implementation
-│   │   ├── 01-defense-in-depth.md
-│   │   ├── 02-authentication.md
-│   │   └── 03-encryption.md
+│   │   └── 01-defense-in-depth.md   # Seguridad multicapa
 │   │
 │   └── 📂 deployment/            # Deployment Procedures
-│       ├── 01-prerequisites.md
-│       ├── 02-installation.md
-│       └── 03-maintenance.md
+│       └── 01-deployment-guide.md   # Guia de despliegue
 │
 ├── 📂 diagrams/                  # Visual Documentation
-│   ├── 🎨 architecture-overview.png
-│   ├── 🎨 network-flow.png
-│   ├── 🎨 security-layers.png
-│   └── 🎨 deployment-pipeline.png
+│   ├── 01-architecture-overview.md  # Diagramas Mermaid
+│   └── 01-architecture-overview.excalidraw
 │
 ├── 📂 reports/                   # Analysis Reports
-│   ├── 📊 performance-analysis.md
-│   ├── 📊 security-audit.md
-│   └── 📊 cost-optimization.md
+│   ├── 01-performance-analysis.md
+│   └── 02-cost-optimization.md
 │
-└── 📂 scripts/                   # Automation Scripts
-    ├── setup/
-    ├── monitoring/
-    └── backup/
+├── 📂 scripts/                   # Automation Scripts
+│   ├── setup/
+│   │   ├── 01-prerequisites.sh
+│   │   └── 02-install-base.sh
+│   ├── monitoring/
+│   │   └── 01-health-check.sh
+│   └── backup/
+│       └── 01-backup-nextcloud.sh
+│
+└── 📂 assets/                    # Screenshots
+    └── screenshots/
+        ├── nextcloud-dashboard.png
+        ├── authelia-portal.png
+        └── grafana-dashboard.png
 ```
 
 ---
