@@ -1,0 +1,29 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph LAYERS["🛡️ 7 Layers of Protection"]
+        L7[1️⃣ Policies]
+        L6[2️⃣ Perimeter]
+        L5[3️⃣ Network]
+        L4[4️⃣ Transport]
+        L3[5️⃣ Auth]
+        L2[6️⃣ App]
+        L1[7️⃣ Data]
+    end
+    
+    ATTACK[🚨 Attack] --> L6
+    L6 -->|Blocked| L5
+    L5 -->|Blocked| L4
+    L4 -->|Blocked| L3
+    L3 -->|Blocked| L2
+    L2 -->|Blocked| L1
+    L1 --> DATA[💾 Your Data]
+
+    style L7 fill:#7aa2f7,color:#1a1b26
+    style L6 fill:#7dcfff,color:#1a1b26
+    style L5 fill:#bb9af7,color:#1a1b26
+    style L4 fill:#9ece6a,color:#1a1b26
+    style L3 fill:#e0af68,color:#1a1b26
+    style L2 fill:#f7768e,color:#1a1b26
+    style L1 fill:#f7768e,color:#1a1b26
+    style DATA fill:#9ece6a,color:#1a1b26

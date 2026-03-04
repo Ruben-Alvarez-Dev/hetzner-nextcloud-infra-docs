@@ -1,0 +1,27 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph PHYSICAL["🖥️ Physical Server"]
+        P1[Hardware<br/>CPU + RAM + Disk]
+    end
+    
+    subgraph HYPERVISOR["⚙️ Hypervisor (KVM)"]
+        H1[Virtualization Layer]
+    end
+    
+    subgraph VPS["☁️ Your VPS"]
+        V1[Virtual CPU]
+        V2[Virtual RAM]
+        V3[Virtual Disk]
+        V4[Your OS]
+    end
+    
+    PHYSICAL --> HYPERVISOR
+    HYPERVISOR --> VPS
+    
+    style P1 fill:#565f89,color:#c0caf5
+    style H1 fill:#414868,color:#c0caf5
+    style V1 fill:#7aa2f7,color:#1a1b26
+    style V2 fill:#9ece6a,color:#1a1b26
+    style V3 fill:#bb9af7,color:#1a1b26
+    style V4 fill:#f7768e,color:#1a1b26

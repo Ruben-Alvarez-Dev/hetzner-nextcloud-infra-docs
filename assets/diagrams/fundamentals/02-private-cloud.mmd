@@ -1,0 +1,24 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph LR
+    subgraph PUBLIC["🌐 Public Cloud"]
+        P1[Google Drive]
+        P2[Dropbox]
+        P3[OneDrive]
+    end
+    
+    subgraph PRIVATE["🏠 Private Cloud"]
+        N1[Nextcloud<br/>Your Server]
+        N2[Your Data]
+        N3[Your Rules]
+    end
+    
+    PUBLIC -->|"Your data on<br/>their servers"| USERS[👤 Users]
+    PRIVATE -->|"Your data on<br/>your server"| USERS
+
+    style P1 fill:#f7768e,color:#1a1b26
+    style P2 fill:#f7768e,color:#1a1b26
+    style P3 fill:#f7768e,color:#1a1b26
+    style N1 fill:#9ece6a,color:#1a1b26
+    style N2 fill:#9ece6a,color:#1a1b26
+    style N3 fill:#9ece6a,color:#1a1b26

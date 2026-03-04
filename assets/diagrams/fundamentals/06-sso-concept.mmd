@@ -1,0 +1,28 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph WITHOUT["❌ Without SSO"]
+        W1[App A] --> W2[Login A]
+        W2 --> W3[App B]
+        W3 --> W4[Login B]
+        W4 --> W5[App C]
+        W5 --> W6[Login C]
+    end
+    
+    subgraph WITH["✅ With SSO"]
+        S1[Login Once]
+        S2[App A]
+        S3[App B]
+        S4[App C]
+        S1 --> S2
+        S1 --> S3
+        S1 --> S4
+    end
+    
+    style W2 fill:#f7768e,color:#1a1b26
+    style W4 fill:#f7768e,color:#1a1b26
+    style W6 fill:#f7768e,color:#1a1b26
+    style S1 fill:#9ece6a,color:#1a1b26
+    style S2 fill:#7aa2f7,color:#1a1b26
+    style S3 fill:#7dcfff,color:#1a1b26
+    style S4 fill:#bb9af7,color:#1a1b26

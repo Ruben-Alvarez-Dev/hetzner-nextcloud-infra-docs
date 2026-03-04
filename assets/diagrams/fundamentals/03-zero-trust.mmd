@@ -1,0 +1,26 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph TRADITIONAL["❌ Traditional Trust"]
+        T1[Trust Internal<br/>Network]
+        T2[VPN = Access]
+        T3[Once inside<br/>Full Access]
+    end
+    
+    subgraph ZEROTRUST["✅ Zero Trust"]
+        Z1[Never Trust<br/>Always Verify]
+        Z2[Every Request<br/>Authenticated]
+        Z3[Least Privilege<br/>Access]
+    end
+    
+    TRADITIONAL --> BREACH[🔓 One breach<br/>= Full access]
+    ZEROTRUST --> SAFE[🔒 One breach<br/>= Limited access]
+
+    style T1 fill:#f7768e,color:#1a1b26
+    style T2 fill:#f7768e,color:#1a1b26
+    style T3 fill:#f7768e,color:#1a1b26
+    style Z1 fill:#9ece6a,color:#1a1b26
+    style Z2 fill:#9ece6a,color:#1a1b26
+    style Z3 fill:#9ece6a,color:#1a1b26
+    style BREACH fill:#f7768e,color:#1a1b26
+    style SAFE fill:#9ece6a,color:#1a1b26

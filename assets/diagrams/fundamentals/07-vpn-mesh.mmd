@@ -1,0 +1,19 @@
+%%{init: {'theme': 'dark'}}%%
+
+graph TB
+    subgraph TRADITIONAL["❌ Traditional VPN"]
+        T1[Client] -->|All traffic| T2[VPN Server]
+        T2 --> T3[Server]
+    end
+    
+    subgraph MESH["✅ Mesh VPN"]
+        M1[Client] -.->|Direct P2P| M2[Server]
+        M3[Coordination<br/>Server]
+        M3 -.-> M1
+        M3 -.-> M2
+    end
+    
+    style T2 fill:#f7768e,color:#1a1b26
+    style M1 fill:#9ece6a,color:#1a1b26
+    style M2 fill:#9ece6a,color:#1a1b26
+    style M3 fill:#7aa2f7,color:#1a1b26
